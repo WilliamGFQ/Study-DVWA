@@ -1,0 +1,74 @@
+HOW TO SETUP DVWA IN KALI LINUX SYSTEM
+参考文献: https://www.jianshu.com/p/0316e7b3a45b
+首先需知, 在kali最新版里已经自带了apache2和mariaDB,
+ 
+也默认支持php:
+ 
+则在环境方面, 只需安装apt-get install php7.0-gd即可:
+ 
+如果出现报错: 找不到这个安装包
+则进行以下操作: 
+参考文献:　https://jingyan.baidu.com/article/454316ab6fb11af7a7c03ae0.html
+Kali 2.0替换APT更新源为国内源并更新系统:
+基本步骤为:
+1. 修改软件源APT-sources.list
+在文件系统打开:   /etc/apt/sources.list
+然后从网上找到最新的kali更新源, 加入到其中,(# 代表注释, 不生效), 之后保存文件:
+ 
+2. 依次执行:
+apt-get update  
+参数解释-----update - Retrieve检索new lists of packages
+apt-get upgrade  
+参数解释-----upgrade - Perform an upgrade
+apt-get dist-upgrade
+参数解释-----dist-upgrade - Distribution upgrade, see apt-get(8)
+apt-get clean
+参数解释-----clean - Erase downloaded archive(存档) files
+
+这些步骤走完以后apache+php+mariaDB的环境就已经创建成功了.
+接下来直接把最新版本的dvwa的zip包下载下来, 解压, 放到:
+/var/www/html/DVWA-master/
+之后在浏览器打开此目录, 就会出现dvwa的setup页面:
+ 
+如果此页面能够出现, 那么你之前的配置也就基本正确了.
+
+在此页面中有如下配置项, 如果是绿色的就表明配置正确, 红色的字体表明配置错误
+(此处的页面是我已经配置好的)
+ 
+你只需把错误配置的那一项百度一下, 就可以找到解答.
+本文只配置一些常规项:
+PHP function allow_url_include: Enabled
+PHP function allow_url_fopen: Enabled
+以上2项配置在/etc/php/7.0/apache2/php.ini中进行修改:
+这两项配置应该为: On的状态.
+ 
+ 
+之后保存配置文件, 重启mysql和apache2, 并查看dvwa的setup页面, 看到这两项为绿色, 则为配置正确:
+ 
+
+之后点击dvwa的按钮连接数据库:
+ 
+如果报错, 则进行以下操作:
+先在/var/www/html/DVWA-master/config/路径下, 复制一份config.inc.php.dist, 将复制的文件的文件名改为config.inc.php即可
+编辑/var/www/html/DVWA-master/config/路径下的配置文件config.inc.php:
+ 
+需要改动的项如下所示, 其中关于数据库的配置请见下文:
+ 
+如上图, 在这里我新建了一个dvwa的mariadb账号, 密码为dvwa, 需要使用的数据库名字为dvwa.
+那么我需要在mariadb中创建此账户, 并赋予其相关权限:
+1. 以root账号连接数据库(kali自带的默认密码为空)
+ 
+2. 赋予此账户全部权限并退出mariadb的命令行.
+ 
+3. 重启mysql和apache2服务.
+ 
+之后重新打开dvwa的setup页面, 点击dvwa的按钮连接数据库,可以看到如下结果, 则数据库连接成功, 现在会跳转到登陆页面, 默认登陆用户名密码(admin/password):
+ 
+ 
+ 
+
+
+
+
+
+
